@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Реєстрація{% endblock title %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'accounts/style/signup.css' %}">
+    <div class="container w-100 h-100 pb-5">
+        <div class="row w-100 h-100 my-5">
+            <div class="offset-sm-4 col-sm-4 d-flex justify-content-center align-items-center">
+                <div class="card h-100 w-100" style="border: 1px solid black; border-radius:20px;">
+                    <form method="post" action="{% url 'accounts:signup' %}"
+                          class="d-flex justify-content-around align-items-center h-100 w-100 flex-column my-5">
+                        {% csrf_token %}
+                        <label for="email">
+                            E-mail
+                            <input name="email" value="" placeholder="E-mail">
+                        </label>
+
+                        <label for="password1">
+                            Пароль
+                            <input name="password1" value="" placeholder="Пароль">
+                        </label>
+
+                        <label for="password2">
+                            Пароль
+                            <input name="password2" value="" placeholder="Пароль">
+                        </label>
+                        <hr>
+                        <label for="last_name">
+                            Прізвище
+                            <input name="last_name" value="" placeholder="Прізвище">
+                        </label>
+                        <label for="first_name">
+                            Ім'я
+                            <input name="first_name" value="" placeholder="Ім'я">
+                        </label>
+                        <label for="middle_name">
+                            По батькові
+                            <input name="middle_name" value="" placeholder="По батькові">
+                        </label>
+                        <hr>
+                        <label for="city">
+                            Місто
+                            <input name="city" value="" placeholder="Місто">
+                        </label>
+                        <label for="region">
+                            Область
+                            <input name="region" value="" placeholder="Область">
+                        </label>
+                        <label for="address">
+                            Адреса
+                            <input name="address" value="" placeholder="Адреса">
+                        </label>
+                        <label for="phone_number">
+                            Номер телефону
+                            <input name="phone_number" value="" placeholder="Номер телефону">
+                        </label>
+                        <label for="study">
+                            Місце навчання
+                            <input name="study" value="" placeholder="Місце навчання">
+                        </label>
+                        <button class="btn btn-dark">Реєстрація</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

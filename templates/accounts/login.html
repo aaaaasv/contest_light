@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Авторизація{% endblock title %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'accounts/style/signup.css' %}">
+    <div class="container w-100 h-100">
+        <div class="row w-100 h-100">
+            <div class="offset-sm-4 col-sm-4 d-flex justify-content-center align-items-center">
+                <div class="card h-50 w-100" style="border: 1px solid black; border-radius:20px;">
+                    <form method="post" action="{% url 'accounts:login' %}"
+                          class="d-flex justify-content-around align-items-center h-100 w-100 flex-column my-5">
+                        {% csrf_token %}
+                        <label for="email">
+                            E-mail
+                            <input name="email" value="" placeholder="E-mail">
+                        </label>
+
+                        <label for="password">
+                            Пароль
+                            <input name="password" value="" placeholder="Пароль">
+                        </label>
+
+                        <button class="btn btn-dark">Авторизація</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
