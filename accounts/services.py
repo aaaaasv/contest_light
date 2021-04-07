@@ -66,12 +66,13 @@ def register_user(register_data):
     with connection.cursor() as cursor:
         try:
             cursor.execute(
-            f"INSERT INTO contesttest.participant (email, password, last_name, first_name, middle_name, address, "
-            f"city_id, region_id, phone_number, study, date_joined) VALUES ('{email}', '{password1}', '{last_name}', "
-            f"'{first_name}', "
-            f"'{middle_name}', '{address}', '{city}', '{region}', '{phone_number}', '{study}', '{date_joined}')")
+                f"INSERT INTO contesttest.participant (email, password, last_name, first_name, middle_name, address, "
+                f"city_id, region_id, phone_number, study, date_joined) VALUES ('{email}', '{password1}', '{last_name}', "
+                f"'{first_name}', "
+                f"'{middle_name}', '{address}', '{city}', '{region}', '{phone_number}', '{study}', '{date_joined}')")
         except IntegrityError:
             print("User with this email is already exists")
+
 
 def login_user(login_data):
     email = login_data.get('email')
@@ -86,3 +87,9 @@ def login_user(login_data):
             return True, user_id
         else:
             return False
+
+
+def get_grade_list():
+    with connection.cursor() as cursor:
+        cursor.execute(f"SELECT id, grade FROM contesttest.grade ORDER BY grade")
+        return cursor.fetchall()

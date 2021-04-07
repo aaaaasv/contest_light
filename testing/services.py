@@ -80,6 +80,7 @@ def get_available_quiz(user_id):
             grade_id = cursor.fetchone()[0]
         except TypeError:
             return None
+    print(grade_id)
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT contesttest.category.url "
@@ -89,9 +90,11 @@ def get_available_quiz(user_id):
             f"and CURRENT_TIMESTAMP < contesttest.session.date_finished and contesttest.category.grade_id='{grade_id}'"
         )
         try:
-            return cursor.fetchone()[0]
+            data = cursor.fetchone()[0]
+            return data
         except TypeError:
             return None
+
 
 def create_profile(user_id, grade_id):
     with connection.cursor() as cursor:
@@ -100,6 +103,7 @@ def create_profile(user_id, grade_id):
             f"(is_participation_paid, is_email_confirmed, participant_id, grade_id) "
             f"VALUES ('false', 'true', '{user_id}', '{grade_id}') "
         )
+
 
 def set_user_grade(user_id, grade_id):
     with connection.cursor() as cursor:
@@ -113,4 +117,5 @@ def set_user_grade(user_id, grade_id):
         if not profile_id:
             create_profile(user_id, grade_id)
         else:
-            print('updating...')
+            cursor.execute(
+                f"UPDATE contesttest.profile SET grade_id='{grade_id}' WHERE contesttest.profile.participant_id='{user_id}';")

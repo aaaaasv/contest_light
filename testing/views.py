@@ -6,7 +6,11 @@ from .services import (
     get_reviews_list,
     create_review,
     get_available_quiz,
-    set_user_grade
+    set_user_grade,
+)
+
+from accounts.services import (
+    get_grade_list
 )
 
 
@@ -45,12 +49,13 @@ def reviews(request):
 
 def quiz_list(request):
     context = {}
-
+    context['grades'] = get_grade_list()
     if request.session.get('logged') and request.session.get('user_id'):
-        availabe_quiz_url = get_available_quiz(request.session.get('user_id'))
+
         if request.POST:
             grade_id = request.POST.get('grade')
             set_user_grade(request.session.get('user_id'), grade_id)
+        availabe_quiz_url = get_available_quiz(request.session.get('user_id'))
 
-        context = {'quiz': availabe_quiz_url}
+        context['quiz'] = availabe_quiz_url
     return render(request, 'testing/quiz_list.html', context=context)
