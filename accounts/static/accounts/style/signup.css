@@ -17,18 +17,43 @@ form label {
 }
 
 form hr {
-    height:5px;
+    height: 5px;
     color: black;
-    width:75%;
+    width: 100%;
 }
 
 form .btn-dark {
     margin-top: 20px;
     border-radius: 20px;
-    width:50%;
+    width: 50%;
 }
 
 form .btn-dark:hover {
     background-color: white;
-    color:black;
+    color: black;
+}
+
+form .form-three, .form-two {
+    display: none;
+}
+
+form .form-error {
+    color: red;
+    display: none;
+}
+
+
+input.activation {
+    font-size: 20px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+input.activation:focus {
+    border: 2px solid black;
 }

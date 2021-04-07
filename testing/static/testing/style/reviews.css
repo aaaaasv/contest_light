@@ -1,0 +1,42 @@
+form.review-form {
+    width:100%;
+    min-width: 100%;
+    margin-top:50px;
+}
+.review-form label {
+    width:100%;
+    max-width: 100%;
+    font-weight: 400;
+    font-size:15px;
+}
+.review-form label textarea {
+    border-radius: 50px;
+    border: 3px solid #9ACFFF;
+    height:300px;
+    padding: 30px 40px;
+    max-height:350px;
+    min-height:200px;
+    font-weight: 300;
+
+}
+.review-form label textarea:focus {
+    outline: none;
+    border: 5px solid #9ACFFF;
+}
+
+.review-form button {
+    width:150px;
+
+}
+form {
+    font-family: Roboto, sans-serif;
+}
+
+.reviews {
+    width:100%;
+    border: 3px solid #9ACFFF;
+    margin-top:50px;
+    margin-bottom:30px;
+    border-radius: 150px;
+    padding:30px 45px;
+}

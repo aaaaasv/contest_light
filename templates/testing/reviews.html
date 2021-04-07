@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Новини{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testing/style/reviews.css' %}">
+
+    <div class="container">
+        <div class="row w-100">
+            <div class="col-sm-12 d-flex justify-content-center align-items-center w-100">
+                <form action="{% url 'testing:reviews' %}" method="post" class="review-form d-flex justify-content-end align-items-end flex-column">
+                    {% csrf_token %}
+                    <label for="review" class="d-flex flex-column mb-4">
+                        Ваш відгук
+                        <textarea placeholder="Починайте писати відгук..." name="review_text" class="mt-1"></textarea>
+                    </label>
+                    <button class="btn btn-blue ">Відправити</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {% for review in reviews_list %}
+                    <div class="reviews">
+                        <h3>{{ review.participant_name }}</h3>
+                        <p>{{ review.text }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

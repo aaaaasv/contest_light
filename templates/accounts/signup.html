@@ -6,65 +6,117 @@
     <div class="container w-100 h-100 pb-5">
         <div class="row w-100 h-100 my-5">
             <div class="offset-sm-4 col-sm-4 d-flex justify-content-center align-items-center">
-                <div class="card h-100 w-100" style="border: 1px solid black; border-radius:20px;">
+                <div class="card h-75 w-100 card-form" style="border: 1px solid black; border-radius:20px;">
                     <form method="post" action="{% url 'accounts:signup' %}"
                           class="d-flex justify-content-around align-items-center h-100 w-100 flex-column my-5">
                         {% csrf_token %}
-                        <label for="email">
-                            E-mail
-                            <input name="email" value="" placeholder="E-mail">
-                        </label>
+                        <div class="form-one">
+                            <label for="email">
+                                E-mail
+                                <input name="email" value="" placeholder="E-mail" class="email-input">
+                            </label>
 
-                        <label for="password1">
-                            Пароль
-                            <input name="password1" value="" placeholder="Пароль">
-                        </label>
+                            <label for="password1">
+                                Пароль
+                                <input name="password1" value="" placeholder="Пароль">
+                            </label>
 
-                        <label for="password2">
-                            Пароль
-                            <input name="password2" value="" placeholder="Пароль">
-                        </label>
-                        <hr>
-                        <label for="last_name">
-                            Прізвище
-                            <input name="last_name" value="" placeholder="Прізвище">
-                        </label>
-                        <label for="first_name">
-                            Ім'я
-                            <input name="first_name" value="" placeholder="Ім'я">
-                        </label>
-                        <label for="middle_name">
-                            По батькові
-                            <input name="middle_name" value="" placeholder="По батькові">
-                        </label>
-                        <hr>
-                        <label for="city">
-                            Місто
-                            <input name="city" value="" placeholder="Місто">
-                        </label>
-                        <label for="region">
-                            Область
-                            <input name="region" value="" placeholder="Область">
-                        </label>
-                        <label for="address">
-                            Адреса
-                            <input name="address" value="" placeholder="Адреса">
-                        </label>
-                        <label for="phone_number">
-                            Номер телефону
-                            <input name="phone_number" value="" placeholder="Номер телефону">
-                        </label>
-                        <label for="study">
-                            Місце навчання
-                            <input name="study" value="" placeholder="Місце навчання">
-                        </label>
-                        <button class="btn btn-dark">Реєстрація</button>
+                            <label for="password2">
+                                Пароль
+                                <input name="password2" value="" placeholder="Пароль">
+                            </label>
+                            <button class="btn btn-blue mt-3 btn-email" type="button">Далі</button>
+                        </div>
+                        <div class="form-two justify-content-center align-items-center flex-column w-100 h-100">
+                            <div class="activation-inputs">
+                                <input type="text" class="activation" maxlength="1">
+                                <input type="text" class="activation" maxlength="1">
+                                <input type="text" class="activation" maxlength="1">
+                                <input type="text" class="activation" maxlength="1">
+                            </div>
+                            <button class="btn btn-blue mt-3 btn-activation" type="button">Перевірити</button>
+
+                        </div>
+                        <div class="form-three">
+                            <label for="last_name">
+                                Прізвище
+                                <input name="last_name" value="" placeholder="Прізвище">
+                            </label>
+                            <label for="first_name">
+                                Ім'я
+                                <input name="first_name" value="" placeholder="Ім'я">
+                            </label>
+                            <label for="middle_name">
+                                По батькові
+                                <input name="middle_name" value="" placeholder="По батькові">
+                            </label>
+                            <hr>
+                            <label for="city">
+                                Місто
+                                <input name="city" value="" placeholder="Місто">
+                            </label>
+                            <label for="region">
+                                Область
+                                <input name="region" value="" placeholder="Область">
+                            </label>
+                            <label for="address">
+                                Адреса
+                                <input name="address" value="" placeholder="Адреса">
+                            </label>
+                            <label for="phone_number">
+                                Номер телефону
+                                <input name="phone_number" value="" placeholder="Номер телефону">
+                            </label>
+                            <label for="study">
+                                Місце навчання
+                                <input name="study" value="" placeholder="Місце навчання">
+                            </label>
+                            <button class="btn btn-blue mt-5">Реєстрація</button>
+                        </div>
                     </form>
                 </div>
 
             </div>
         </div>
     </div>
+    <script>
+        function sendActivationCode(email) {
+            $.ajax({
+                url: '{% url 'accounts:ajax-send-code' %}',
+                data: {email: email},
+                complete: function (response) {
+                    if (response.responseJSON.email_unique === 'false') {
+                        alert("Користувач з такою електронною поштою вже існує!")
+                                                $('.form-two').hide()
+                        $('.form-one').show()
+                    }
+                },
+                error: function () {
 
+                },
+            });
+            return false;
+        }
+
+        function checkActivationCode(userCode) {
+            $.ajax({
+                url: '{% url 'accounts:ajax-check-code' %}',
+                data: {userCode: userCode},
+                complete: function (response) {
+                    console.log(response)
+                    console.log(response.responseJSON.is_confirmed)
+                    if (response.responseJSON.is_confirmed === 'true') {
+                        $('.btn-activation').text('Далі');
+
+                    }
+                },
+                error: function () {
+
+                },
+            });
+            return false;
+        }
+    </script>
+    <script src="{% static 'accounts/js/signup.js' %}"></script>
 
 {% endblock content %}

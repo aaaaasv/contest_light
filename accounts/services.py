@@ -1,4 +1,4 @@
-from django.db import connection
+from django.db import connection, IntegrityError
 import datetime
 
 from django.contrib.auth.hashers import make_password, check_password
@@ -25,7 +25,17 @@ def get_or_create_region(region_name):
 
 
 def check_email_unique(email):
-    return True
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM contesttest.participant WHERE email='{email}'"
+        )
+
+        if cursor.fetchone():
+            print("User email is not unique")
+            return False
+        else:
+            print('User email is unique')
+            return True
 
 
 def register_user(register_data):
@@ -54,19 +64,25 @@ def register_user(register_data):
     password1 = make_password(password1)
 
     with connection.cursor() as cursor:
-        cursor.execute(
-            f"INSERT INTO contesttest.participant (email, password, last_name, first_name, middle_name, address, city_id, region_id, phone_number, study, date_joined) VALUES ('{email}', '{password1}', '{last_name}', '{first_name}', '{middle_name}', '{address}', '{city}', '{region}', '{phone_number}', '{study}', '{date_joined}')")
-
+        try:
+            cursor.execute(
+            f"INSERT INTO contesttest.participant (email, password, last_name, first_name, middle_name, address, "
+            f"city_id, region_id, phone_number, study, date_joined) VALUES ('{email}', '{password1}', '{last_name}', "
+            f"'{first_name}', "
+            f"'{middle_name}', '{address}', '{city}', '{region}', '{phone_number}', '{study}', '{date_joined}')")
+        except IntegrityError:
+            print("User with this email is already exists")
 
 def login_user(login_data):
     email = login_data.get('email')
     password = login_data.get('password')
 
     with connection.cursor() as cursor:
-        cursor.execute(f"SELECT password FROM contesttest.participant WHERE email='{email}'")
-        db_password = cursor.fetchone()[0]
+        cursor.execute(f"SELECT password, id FROM contesttest.participant WHERE email='{email}'")
+        data = cursor.fetchone()
+        db_password = data[0]
+        user_id = data[1]
         if check_password(password, db_password):
-            print("ITS A MATCH!", password, db_password)
-            return True
+            return True, user_id
         else:
-            print("IST NOT A MATCH", make_password(password), db_password)
+            return False

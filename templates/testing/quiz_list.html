@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Доступні тести{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    {#    <link rel="stylesheet" href="{% static 'testing/style/reviews.css' %}">#}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 h-100 d-flex justify-content-center align-items-center">
+                {% if quiz %}
+                    <a href="{% url 'testing:quiz' %}">
+                        <button class="btn btn-blue">Почати тестування</button>
+                    </a>
+
+                {% else %}
+                    <p>Для Вас тестування ще недоступне.</p>
+                {% endif %}
+                <form action="{% url 'testing:available_tests' %}" method="post" class="form-grade">
+                    {% csrf_token %}
+                    <select name="grade" id="grade" class="select-grade">
+                        <option value="1">9</option>
+                        <option value="2">10</option>
+                        <option value="3">11</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.select-grade').on('change', function () {
+            $('.form-grade').submit()
+        })
+    </script>
+{% endblock content %}
