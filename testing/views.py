@@ -8,7 +8,7 @@ from .services import (
     get_available_quiz,
     set_user_grade,
     get_old_categories_results,
-    get_last_categories
+    get_result_for_last_categories
 )
 
 from accounts.services import (
@@ -22,6 +22,7 @@ def quiz(request):
         availabe_quiz_url = get_available_quiz(request.session.get('user_id'))
 
         context = {'quiz_url': availabe_quiz_url}
+    print(request.session['user_id'])
     return render(request, 'testing/quiz.html', context=context)
 
 
@@ -64,7 +65,8 @@ def quiz_list(request):
 
 
 def results(request):
+    get_old_categories_results()  # calculates results for finished categories without any results
     context = {}
-    get_old_categories_results() # calculates results for finished categories without any results
-    get_last_categories()
+    context['results'] = get_result_for_last_categories()
+    print(context)
     return render(request, 'testing/results.html', context=context)

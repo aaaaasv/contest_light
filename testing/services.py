@@ -141,8 +141,9 @@ def save_result(category_id, answers_url):
     with connection.cursor() as cursor:
         for result in results:
             participant_id = get_user_by_email(result)
-            cursor.execute(
-                f"INSERT INTO contesttest.result (score, category_id, participant_id) VALUES ('{results[result]}', '{category_id}', '{participant_id}')")
+            if participant_id is not None:  # Some user used different emails for registration and test
+                cursor.execute(
+                    f"INSERT INTO contesttest.result (score, category_id, participant_id) VALUES ('{results[result]}', '{category_id}', '{participant_id}')")
 
 
 def get_old_categories_results():
@@ -166,60 +167,61 @@ def get_old_categories_results():
     return is_over
 
 
-# def get_previous_category():
-#     # get the current day of the year
-#     doy = datetime.datetime.today().timetuple().tm_yday
-#
-#     # "day of year" ranges for the northern hemisphere
-#     spring = range(80, 172)
-#     summer = range(172, 264)
-#     fall = range(264, 355)
-#     # winter = everything else
-#
-#     if doy in spring:
-#         season = 'Весняна'
-#     elif doy in summer:
-#         season = 'Літня'
-#     elif doy in fall:
-#         season = 'Осіння'
-#     else:
-#         season = 'Зимова'
-#
-#     prev_seasons = {
-#         'Весняна': 'Зимова',
-#         'Зимова': 'Осіння',
-#         'Осіння': 'Літня',
-#         'Літня': 'Весняна',
-#     }
-#     print(prev_seasons[season])
-#     with connection.cursor() as cursor:
-#         cursor.execute(
-#             f"SELECT contesttest.session.id, contesttest.category.id, contesttest.session.name, contesttest.session.date_finished "
-#             f"FROM contesttest.session "
-#             f"JOIN contesttest.category ON contesttest.session.id=contesttest.category.session_id "
-#             f"WHERE contesttest.session.date_finished < CURRENT_TIMESTAMP AND date_part('year', contesttest.session.date_finished) = date_part('year', CURRENT_DATE) "
-#             f"AND contesttest.session.name='{prev_seasons[season]}'"
-#         )
-#
-#         print(cursor.fetchall())
+class Result:
+    def __init__(self, **kwargs):
+        self.first_name = kwargs.get('first_name')
+        self.middle_name = kwargs.get('middle_name')
+        self.last_name = kwargs.get('last_name')
+        self.score = kwargs.get('score')
+        self.grade = kwargs.get('grade')
 
 
-def get_last_categories():
+def get_grade_name_by_id(id):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT contesttest.grade.grade FROM contesttest.grade WHERE id='{id}'"
+        )
+        data = cursor.fetchone()
+        if data:
+            return data[0]
+        else:
+            return None
 
+
+def get_result_for_category(category_id):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT contesttest.participant.first_name, contesttest.participant.middle_name, contesttest.participant.last_name, contesttest.result.score, contesttest.result.category_id, contesttest.result.participant_id FROM contesttest.result "
+            f"JOIN contesttest.participant ON contesttest.result.participant_id=contesttest.participant.id "
+            f"WHERE contesttest.result.category_id='{category_id}'"
+        )
+        return cursor.fetchall()
+
+
+def get_result_for_last_categories():
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT contesttest.category.id, contesttest.category.grade_id "
             "FROM contesttest.category "
             "JOIN contesttest.session ON contesttest.category.session_id=contesttest.session.id "
-            "ORDER BY contesttest.session.date_finished"
+            "ORDER BY contesttest.session.date_finished DESC"
         )
         data = cursor.fetchall()
     last_category_for_grade = {
 
     }
     for i in data:
+        # grade_id : category_id
         last_category_for_grade[i[1]] = i[0]
+    result_list = {
+        # grade : result list
+    }
 
-    print(last_category_for_grade)
-
-
+    for grade in last_category_for_grade:
+        result_for_grade = []
+        result_info = get_result_for_category(last_category_for_grade[grade])
+        for i in result_info:
+            result_for_grade.append(Result(first_name=i[0], middle_name=i[1], last_name=i[2], score=i[3],
+                                           grade=get_grade_name_by_id(grade)))
+        result_list[grade] = result_for_grade
+    return result_list

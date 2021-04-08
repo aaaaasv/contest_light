@@ -8,33 +8,36 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 h-100 d-flex justify-content-center align-items-center flex-column">
-            {% if results %}
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    {% for result in results %}
-
+                {% if results %}
+                    <table class="table">
+                        <thead>
                         <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
+                            <th scope="col">#</th>
+                            <th scope="col">Прізвище</th>
+                            <th scope="col">Ім'я</th>
+                            <th scope="col">По батькові</th>
+                            <th scope="col">Бал</th>
                         </tr>
+                        </thead>
+                        <tbody>
 
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-            <p>Результати ще не доступні</p>
-            {% endif %}
+                        {% for grade, results in results.items %}
+                            {% for r in results %}
+                                {{ r.grade }}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ r.last_name }}</td>
+                                    <td>{{ r.first_name }}</td>
+                                    <td>{{ r.middle_name }}</td>
+                                    <td>{{ r.score }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Результати ще не доступні</p>
+                {% endif %}
             </div>
         </div>
     </div>
