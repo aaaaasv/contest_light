@@ -10,5 +10,6 @@ urlpatterns = [
                   path('news/', views.news, name='news'),
                   path('news/<slug:slug>/', views.news_detail, name='news_detail'),
                   path('reviews/', views.reviews, name='reviews'),
-                  path('quiz_list/', views.quiz_list, name='available_tests')
+                  path('quiz_list/', views.quiz_list, name='available_tests'),
+                  path('results/', views.results, name='results'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

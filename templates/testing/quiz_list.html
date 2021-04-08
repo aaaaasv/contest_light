@@ -4,10 +4,20 @@
 {% block content %}
     {% load static %}
     {#    <link rel="stylesheet" href="{% static 'testing/style/reviews.css' %}">#}
-
+<style>
+select {
+    border: 2px solid #9ACFFF;
+    width:200px;
+    height:50px;
+    margin-top:30px;
+    border-radius:25px;
+    padding-left:10px;
+    padding-right:10px;
+}
+</style>
     <div class="container">
         <div class="row">
-            <div class="col-sm-12 h-100 d-flex justify-content-center align-items-center">
+            <div class="col-sm-12 h-100 d-flex justify-content-center align-items-center flex-column">
                 {% if quiz %}
                     <a href="{% url 'testing:quiz' %}">
                         <button class="btn btn-blue">Почати тестування</button>
@@ -19,9 +29,9 @@
                 <form action="{% url 'testing:available_tests' %}" method="post" class="form-grade">
                     {% csrf_token %}
                     <select name="grade" id="grade" class="select-grade">
-                        <option value="1">9</option>
-                        <option value="2">10</option>
-                        <option value="3">11</option>
+                        {% for id, grade in grades %}
+                            <option value="{{ id }}">{{ grade }}</option>
+                        {% endfor %}
                     </select>
                 </form>
             </div>

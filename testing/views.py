@@ -59,3 +59,8 @@ def quiz_list(request):
 
         context['quiz'] = availabe_quiz_url
     return render(request, 'testing/quiz_list.html', context=context)
+
+
+def results(request):
+    context = {}
+    return render(request, 'testing/results.html', context=context)
