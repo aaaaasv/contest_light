@@ -1,6 +1,8 @@
 from django.db import connection, IntegrityError
 import datetime
-
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
 
 
@@ -40,12 +42,16 @@ def check_email_unique(email):
 
 def register_user(register_data):
     email = register_data.get('email')
+
+    validate_email(email)
     if not check_email_unique(email):
         return 'user with this email is already has an account'
     password1 = register_data.get('password1')
     password2 = register_data.get('password2')
+
     if password1 != password2:
         return 'passwords are different'
+    validate_password(password1)
 
     last_name = register_data.get('last_name')
     first_name = register_data.get('first_name')
@@ -62,7 +68,6 @@ def register_user(register_data):
     date_joined = datetime.datetime.now()
 
     password1 = make_password(password1)
-
     with connection.cursor() as cursor:
         try:
             cursor.execute(

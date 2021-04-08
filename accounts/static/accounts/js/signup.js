@@ -1,9 +1,15 @@
 $(window).on('load', function () {
 
+    function validateEmail(email) {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
 
     $('.btn-email').on('click', function () {
-        if (!$('.form-one input').val()) {
-            alert('Будь ласка, заповніть усі поля');
+        let isEmail = validateEmail($('.email-input').val())
+        if (!$('.form-one input').val() || !isEmail || $('.password-input-one').val() !== $('.password-input-two').val()) {
+            alert('Будь ласка, заповніть усі поля коректно');
         } else {
             $('.form-one').hide();
             $('.form-two').css('display', 'flex');

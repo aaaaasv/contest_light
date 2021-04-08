@@ -3,6 +3,7 @@ import random
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
 
 from accounts.services import (
     register_user,
@@ -12,9 +13,13 @@ from accounts.services import (
 
 
 def signup(request):
+    context = {}
     if request.POST:
-        register_user(request.POST)
-    return render(request, template_name='accounts/signup.html')
+        try:
+            register_user(request.POST)
+        except ValidationError as e:
+            context = {'errors': e}
+    return render(request, template_name='accounts/signup.html', context=context)
 
 
 def login(request):
