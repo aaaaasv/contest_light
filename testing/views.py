@@ -70,3 +70,7 @@ def results(request):
     context['results'] = get_result_for_last_categories()
     print(context)
     return render(request, 'testing/results.html', context=context)
+
+
+def index(request):
+    return render(request, 'testing/index.html')

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Тестування{% endblock %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testing/style/index.css' %}">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-sm-4 d-flex justify-content-center align-items-center h-100">
+                <img src="{% static 'testing/img/index_win.png' %}" alt="" class="img-fluid win">
+            </div>
+            <div class="col-sm-8 d-flex justify-content-center align-items-center h-100 pb-5">
+                <h1 style="color:#C8DAFE; font-size:90px; font-weight: 900; font-family: Roboto, sans-serif; margin-bottom:100px;">
+                    всеукраїнський<br>конкурс<br>з правознавства</h1>
+                <a href="{% url 'accounts:signup' %}"><button class="btn btn-blue btn-cto">спробувати</button></a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
