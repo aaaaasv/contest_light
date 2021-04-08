@@ -83,7 +83,7 @@ def get_available_quiz(user_id):
     print(grade_id)
     with connection.cursor() as cursor:
         cursor.execute(
-            f"SELECT contesttest.category.url "
+            f"SELECT contesttest.category.test_url "
             f"FROM contesttest.category "
             f"JOIN contesttest.session ON contesttest.category.session_id=contesttest.session.id "
             f"WHERE CURRENT_TIMESTAMP > contesttest.session.date_started "
@@ -119,3 +119,107 @@ def set_user_grade(user_id, grade_id):
         else:
             cursor.execute(
                 f"UPDATE contesttest.profile SET grade_id='{grade_id}' WHERE contesttest.profile.participant_id='{user_id}';")
+
+
+def get_user_by_email(email):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT contesttest.participant.id "
+            f"FROM contesttest.participant "
+            f"WHERE contesttest.participant.email='{email}'"
+        )
+        user_id = cursor.fetchone()
+        if user_id:
+            return user_id[0]
+        else:
+            return None
+
+
+def save_result(category_id, answers_url):
+    from .result_handler import get_by_url
+    results = get_by_url(answers_url)
+    with connection.cursor() as cursor:
+        for result in results:
+            participant_id = get_user_by_email(result)
+            cursor.execute(
+                f"INSERT INTO contesttest.result (score, category_id, participant_id) VALUES ('{results[result]}', '{category_id}', '{participant_id}')")
+
+
+def get_old_categories_results():
+    """
+    Get all old (previous) categories without any result saved.
+    """
+    is_over = False
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT contesttest.category.answers_url, contesttest.category.id "
+            f"FROM contesttest.session "
+            f"JOIN contesttest.category ON contesttest.session.id=contesttest.category.session_id "
+            f"WHERE contesttest.session.date_finished < CURRENT_TIMESTAMP AND contesttest.category.id NOT IN (SELECT category_id FROM contesttest.result); "
+        )
+        data = cursor.fetchall()
+
+        for i in data:
+            if i[0] and i[1]:
+                save_result(i[1], i[0])
+
+    return is_over
+
+
+# def get_previous_category():
+#     # get the current day of the year
+#     doy = datetime.datetime.today().timetuple().tm_yday
+#
+#     # "day of year" ranges for the northern hemisphere
+#     spring = range(80, 172)
+#     summer = range(172, 264)
+#     fall = range(264, 355)
+#     # winter = everything else
+#
+#     if doy in spring:
+#         season = 'Весняна'
+#     elif doy in summer:
+#         season = 'Літня'
+#     elif doy in fall:
+#         season = 'Осіння'
+#     else:
+#         season = 'Зимова'
+#
+#     prev_seasons = {
+#         'Весняна': 'Зимова',
+#         'Зимова': 'Осіння',
+#         'Осіння': 'Літня',
+#         'Літня': 'Весняна',
+#     }
+#     print(prev_seasons[season])
+#     with connection.cursor() as cursor:
+#         cursor.execute(
+#             f"SELECT contesttest.session.id, contesttest.category.id, contesttest.session.name, contesttest.session.date_finished "
+#             f"FROM contesttest.session "
+#             f"JOIN contesttest.category ON contesttest.session.id=contesttest.category.session_id "
+#             f"WHERE contesttest.session.date_finished < CURRENT_TIMESTAMP AND date_part('year', contesttest.session.date_finished) = date_part('year', CURRENT_DATE) "
+#             f"AND contesttest.session.name='{prev_seasons[season]}'"
+#         )
+#
+#         print(cursor.fetchall())
+
+
+def get_last_categories():
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT contesttest.category.id, contesttest.category.grade_id "
+            "FROM contesttest.category "
+            "JOIN contesttest.session ON contesttest.category.session_id=contesttest.session.id "
+            "ORDER BY contesttest.session.date_finished"
+        )
+        data = cursor.fetchall()
+    last_category_for_grade = {
+
+    }
+    for i in data:
+        last_category_for_grade[i[1]] = i[0]
+
+    print(last_category_for_grade)
+
+

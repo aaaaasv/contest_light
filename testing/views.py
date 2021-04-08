@@ -7,6 +7,8 @@ from .services import (
     create_review,
     get_available_quiz,
     set_user_grade,
+    get_old_categories_results,
+    get_last_categories
 )
 
 from accounts.services import (
@@ -63,4 +65,6 @@ def quiz_list(request):
 
 def results(request):
     context = {}
+    get_old_categories_results() # calculates results for finished categories without any results
+    get_last_categories()
     return render(request, 'testing/results.html', context=context)
