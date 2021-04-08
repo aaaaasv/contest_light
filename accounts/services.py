@@ -33,10 +33,10 @@ def check_email_unique(email):
         )
 
         if cursor.fetchone():
-            print("User email is not unique")
+            # User email is not unique
             return False
         else:
-            print('User email is unique')
+            # User email is unique
             return True
 
 
@@ -50,7 +50,7 @@ def register_user(register_data):
     password2 = register_data.get('password2')
 
     if password1 != password2:
-        return 'passwords are different'
+        raise ValidationError("Passwords are different")
     validate_password(password1)
 
     last_name = register_data.get('last_name')
@@ -91,7 +91,7 @@ def login_user(login_data):
         if check_password(password, db_password):
             return True, user_id
         else:
-            return False
+            return False, None
 
 
 def get_grade_list():
