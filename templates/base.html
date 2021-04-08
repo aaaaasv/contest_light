@@ -21,7 +21,16 @@
 </head>
 <body>
 <nav class="main-nav">
+    <div class="nav-left">
+        {% if request.session.logged %}
+            <a href="{% url 'accounts:logout' %}"><div class="auth-btn">Вийти<img src="{% static 'testing/img/logout.svg' %}" alt=""></div></a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}"><div class="auth-btn">Увійти<img src="{% static 'testing/img/login.svg' %}" alt=""></div></a>
+            <a href="{% url 'accounts:signup' %}" ><div class="auth-btn">Реєстрація<img src="{% static 'testing/img/signup.svg' %}" alt=""></div></a>
+        {% endif %}
+    </div>
     <img src="{% static 'testing/img/logo.svg' %}">
+    <div class="nav-right"></div>
 </nav>
 <div class="side-menu">
     <a href="{% url 'testing:available_tests' %}">

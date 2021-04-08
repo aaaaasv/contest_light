@@ -7,6 +7,7 @@ app_name = 'accounts'
 urlpatterns = [
                   path('signup/', views.signup, name='signup'),
                   path('login/', views.login, name='login'),
+                  path('logout/', views.logout, name='logout'),
                   path('ajax-send-code/', views.ajax_send_code, name='ajax-send-code'),
                   path('ajax-check-code/', views.ajax_check_code, name='ajax-check-code'),
               ] \

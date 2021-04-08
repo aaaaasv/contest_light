@@ -1,7 +1,7 @@
 import random
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 
 from accounts.services import (
@@ -24,6 +24,12 @@ def login(request):
             request.session['logged'] = True
             request.session['user_id'] = user_id
     return render(request, template_name='accounts/login.html')
+
+
+def logout(request):
+    request.session['logged'] = None
+    request.session['user_id'] = None
+    return redirect('accounts:login')
 
 
 def ajax_send_code(request):
@@ -57,5 +63,3 @@ def ajax_check_code(request):
         request.session['email_confirmed'] = True
     print(user_code, correct_code, is_confirmed)
     return JsonResponse({"is_confirmed": is_confirmed}, status=200)
-
-

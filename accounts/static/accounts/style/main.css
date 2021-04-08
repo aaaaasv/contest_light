@@ -59,3 +59,26 @@ a {
     border-radius: 0 25px 25px 0;
     cursor: pointer;
 }
+
+nav .nav-left {
+    position: absolute;
+    left:5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.auth-btn {
+    color:white;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    margin-right:40px;
+    cursor: pointer;
+}
+.auth-btn img {
+    margin-bottom:5px;
+    max-height:30px;
+}
