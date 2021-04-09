@@ -29,8 +29,8 @@
             <a href="{% url 'accounts:signup' %}" ><div class="auth-btn">Реєстрація<img src="{% static 'testing/img/signup.svg' %}" alt=""></div></a>
         {% endif %}
     </div>
-    <img src="{% static 'testing/img/logo.svg' %}">
-    <div class="nav-right"></div>
+    <a href="{% url 'index' %}"><img src="{% static 'testing/img/logo.svg' %}"></a>
+    <div class="nav-right"><a href="{% url 'testing:results' %}"><div class="auth-btn">Результати<img src="{% static 'testing/img/result_table.svg' %}" alt=""></div></a></div>
 </nav>
 <div class="side-menu">
     <a href="{% url 'testing:available_tests' %}">

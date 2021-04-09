@@ -23,9 +23,9 @@
 
                         {% for grade, results in results.items %}
                             {% for r in results %}
-                                {{ r.grade }}
+
                                 <tr>
-                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <th scope="row">{{ r.grade }}</th>
                                     <td>{{ r.last_name }}</td>
                                     <td>{{ r.first_name }}</td>
                                     <td>{{ r.middle_name }}</td>
