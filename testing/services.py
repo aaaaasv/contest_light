@@ -135,13 +135,46 @@ def get_user_by_email(email):
             return None
 
 
+def check_participant_session_unique(user_id, category_id):
+    print("Checking participant_session uniqueness...")
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT session_id FROM contesttest.category WHERE contesttest.category.id='{category_id}'"
+        )
+        data = cursor.fetchone()
+        try:
+            session_id = data[0]
+            print("Session id found", session_id )
+        except (TypeError, IndexError):
+            print("No session id")
+            return None
+
+        cursor.execute(
+            f"SELECT contesttest.result.id FROM contesttest.result "
+            f"JOIN contesttest.category ON contesttest.category.id=contesttest.result.category_id "
+            f"WHERE contesttest.category.session_id='{session_id}' AND contesttest.result.participant_id='{user_id}'"
+        )
+
+        data = cursor.fetchall()
+        print("Searching for results")
+        try:
+            if len(data) > 0:
+                print("Result found, not unique", data)
+                return False
+            else:
+                return True
+        except TypeError:
+            print("Result not found unique", data)
+            return True
+
+
 def save_result(category_id, answers_url):
     from .result_handler import get_by_url
     results = get_by_url(answers_url)
     with connection.cursor() as cursor:
         for result in results:
             participant_id = get_user_by_email(result)
-            if participant_id is not None:  # Some user used different emails for registration and test
+            if participant_id is not None and check_participant_session_unique(participant_id, category_id):  # Some user used different emails for registration and test
                 cursor.execute(
                     f"INSERT INTO contesttest.result (score, category_id, participant_id) VALUES ('{results[result]}', '{category_id}', '{participant_id}')")
 
