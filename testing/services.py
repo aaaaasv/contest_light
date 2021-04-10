@@ -24,12 +24,22 @@ class Review:
         self.participant_name = self.get_participant_name()
 
     def get_participant_name(self):
-        return self.participant_id
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT participant.last_name, participant.first_name, participant.middle_name "
+                           f"FROM contesttest.review "
+                           f"JOIN contesttest.participant ON contesttest.review.participant_id=contesttest.participant.id "
+                           f"WHERE contesttest.participant.id='{self.participant_id}'")
+            name = cursor.fetchall()
+        if name:
+            name = name[0]
+        else:
+            return ''
+        return ' '.join(name)
 
 
 def get_news_list():
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM contesttest.post ORDER BY date_created")
+        cursor.execute("SELECT * FROM contesttest.post ORDER BY date_created DESC")
         news_list = {}
         news = []
         for row in cursor.fetchall():
@@ -50,7 +60,7 @@ def get_one_news(slug):
 
 def get_reviews_list():
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM contesttest.review WHERE is_approved=true ORDER BY date")
+        cursor.execute("SELECT * FROM contesttest.review WHERE is_approved=true ORDER BY date DESC")
         review_list = {}
         reviews = []
         for row in cursor.fetchall():
