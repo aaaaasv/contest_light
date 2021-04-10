@@ -86,8 +86,11 @@ def login_user(login_data):
     with connection.cursor() as cursor:
         cursor.execute(f"SELECT password, id FROM contesttest.participant WHERE email='{email}'")
         data = cursor.fetchone()
-        db_password = data[0]
-        user_id = data[1]
+        if data:
+            db_password = data[0]
+            user_id = data[1]
+        else:
+            return False, None
         if check_password(password, db_password):
             return True, user_id
         else:
@@ -96,5 +99,5 @@ def login_user(login_data):
 
 def get_grade_list():
     with connection.cursor() as cursor:
-        cursor.execute(f"SELECT id, grade FROM contesttest.grade ORDER BY grade")
+        cursor.execute(f"SELECT id, grade FROM contesttest.grade ORDER BY grade.grade")
         return cursor.fetchall()
