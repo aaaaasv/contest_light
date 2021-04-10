@@ -7,8 +7,8 @@
             <div class="col-sm-12">
                 {% for news in news_list %}
                     <div class="news">
-                        <a href="{% url 'testing:news_detail' news.slug %}"><h3>{{ news.title }}</h3></a>
-                        <p>{{ news.text }}</p>
+                        <a href="{% url 'testing:news-detail' news.slug %}"><h3>{{ news.title }}</h3></a>
+                        <p>{{ news.text|truncatechars:500 }}</p>
                     </div>
                 {% endfor %}
             </div>

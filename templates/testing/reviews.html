@@ -8,6 +8,7 @@
     <div class="container">
         <div class="row w-100">
             <div class="col-sm-12 d-flex justify-content-center align-items-center w-100">
+                {% if request.session.logged and request.session.user_id %}
                 <form action="{% url 'testing:reviews' %}" method="post" class="review-form d-flex justify-content-end align-items-end flex-column">
                     {% csrf_token %}
                     <label for="review" class="d-flex flex-column mb-4">
@@ -16,6 +17,9 @@
                     </label>
                     <button class="btn btn-blue ">Відправити</button>
                 </form>
+                {% else %}
+                    <h3>Авторизуйтеся, щоб написати відгук.</h3>
+                {% endif %}
             </div>
         </div>
         <div class="row">
