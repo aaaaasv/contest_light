@@ -17,6 +17,8 @@
         }
     </style>
     {% load static %}
+ <link rel="shortcut icon" href="{% static 'testing/img/logo.svg' %}" type="image/png">
+
     <link rel="stylesheet" href="{% static 'accounts/style/main.css' %}">
 </head>
 <body>
@@ -30,10 +32,14 @@
         {% endif %}
     </div>
     <a href="{% url 'index' %}"><img src="{% static 'testing/img/logo.svg' %}"></a>
-    <div class="nav-right"><a href="{% url 'testing:results' %}"><div class="auth-btn">Результати<img src="{% static 'testing/img/result_table.svg' %}" alt=""></div></a></div>
+    <div class="nav-right">
+        <a href="{% url 'testing:results' %}"><div class="auth-btn">Результати<img src="{% static 'testing/img/result_table.svg' %}" alt=""></div></a>
+        <a href="{% url 'testing:reviews' %}"><div class="auth-btn">Відгуки<img src="{% static 'testing/img/review.svg' %}" alt=""></div></a>
+        <a href="{% url 'testing:news' %}"><div class="auth-btn">Новини<img src="{% static 'testing/img/news.svg' %}" alt=""></div></a>
+    </div>
 </nav>
 <div class="side-menu">
-    <a href="{% url 'testing:available_tests' %}">
+    <a href="{% url 'testing:available-tests' %}">
         <div class="check-tests d-flex justify-content-center align-items-center"><img
                 src="{% static 'testing/img/search.svg' %}" class="img-fluid" title="Переглянути доступні тести"></div>
     </a>
