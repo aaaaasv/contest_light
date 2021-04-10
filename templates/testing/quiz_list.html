@@ -3,18 +3,17 @@
 
 {% block content %}
     {% load static %}
-    {#    <link rel="stylesheet" href="{% static 'testing/style/reviews.css' %}">#}
-<style>
-select {
-    border: 2px solid #9ACFFF;
-    width:200px;
-    height:50px;
-    margin-top:30px;
-    border-radius:25px;
-    padding-left:10px;
-    padding-right:10px;
-}
-</style>
+    <style>
+        select {
+            border: 2px solid #9ACFFF;
+            width: 200px;
+            height: 50px;
+            margin-top: 30px;
+            border-radius: 25px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    </style>
     <div class="container">
         <div class="row">
             <div class="col-sm-12 h-100 d-flex justify-content-center align-items-center flex-column">
@@ -24,11 +23,22 @@ select {
                     </a>
 
                 {% else %}
-                    <p>Для Вас тестування ще недоступне.</p>
+                    {% if user_grade %}
+                        <p>Для Вас тестування ще недоступне.</p>
+                    {% else %}
+                        <p>Спочатку оберіть клас</p>
+                    {% endif %}
                 {% endif %}
-                <form action="{% url 'testing:available-tests' %}" method="post" class="form-grade">
+                <form action="{% url 'testing:available-tests' %}" method="post"
+                      class="form-grade d-flex flex-column justify-content-center align-items-center text-center mt-3">
                     {% csrf_token %}
+                    {% if user_grade %}
+                        <span><b>Ваш клас: {{ user_grade }}</b></span>
+                    {% endif %}
+                    <label for="grade"
+                           class="mt-5 d-flex justify-content-center align-items-center text-center">Клас</label>
                     <select name="grade" id="grade" class="select-grade">
+                        <option value="">-----</option>
                         {% for id, grade in grades %}
                             <option value="{{ id }}">{{ grade }}</option>
                         {% endfor %}

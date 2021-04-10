@@ -90,7 +90,6 @@ def get_available_quiz(user_id):
             grade_id = cursor.fetchone()[0]
         except TypeError:
             return None
-    print(grade_id)
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT contesttest.category.test_url "
@@ -146,7 +145,6 @@ def get_user_by_email(email):
 
 
 def check_participant_session_unique(user_id, category_id):
-    print("Checking participant_session uniqueness...")
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT session_id FROM contesttest.category WHERE contesttest.category.id='{category_id}'"
@@ -154,9 +152,7 @@ def check_participant_session_unique(user_id, category_id):
         data = cursor.fetchone()
         try:
             session_id = data[0]
-            print("Session id found", session_id )
         except (TypeError, IndexError):
-            print("No session id")
             return None
 
         cursor.execute(
@@ -166,15 +162,12 @@ def check_participant_session_unique(user_id, category_id):
         )
 
         data = cursor.fetchall()
-        print("Searching for results")
         try:
             if len(data) > 0:
-                print("Result found, not unique", data)
                 return False
             else:
                 return True
         except TypeError:
-            print("Result not found unique", data)
             return True
 
 
@@ -184,14 +177,15 @@ def save_result(category_id, answers_url):
     with connection.cursor() as cursor:
         for result in results:
             participant_id = get_user_by_email(result)
-            if participant_id is not None and check_participant_session_unique(participant_id, category_id):  # Some user used different emails for registration and test
+            if participant_id is not None and check_participant_session_unique(participant_id,
+                                                                               category_id):  # Some user used different emails for registration and test - participant = None
                 cursor.execute(
                     f"INSERT INTO contesttest.result (score, category_id, participant_id) VALUES ('{results[result]}', '{category_id}', '{participant_id}')")
 
 
-def get_old_categories_results():
+def save_old_categories_results():
     """
-    Get all old (previous) categories without any result saved.
+    Get all old (previous) categories without any result saved and save it.
     """
     is_over = False
     with connection.cursor() as cursor:
@@ -268,3 +262,19 @@ def get_result_for_last_categories():
                                            grade=get_grade_name_by_id(grade)))
         result_list[grade] = result_for_grade
     return result_list
+
+
+def get_user_grade(user_id):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT grade.grade FROM contesttest.grade "
+            f"JOIN contesttest.profile ON contesttest.profile.grade_id=contesttest.grade.id "
+            f"WHERE contesttest.profile.participant_id='{user_id}'"
+        )
+
+        data = cursor.fetchone()
+
+        if data:
+            return data[0]
+        else:
+            return None
