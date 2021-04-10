@@ -7,6 +7,11 @@
         <div class="row w-100 h-100">
             <div class="offset-sm-4 col-sm-4 d-flex justify-content-center align-items-center">
                 <div class="card h-50 w-100" style="border: 1px solid black; border-radius:20px;">
+                    {% if errors %}
+                        <div class="errors d-flex justify-content-center align-items-center w-100 flex-column text-center">
+                                <div style="color:red" class="w-100 p-3">{{ errors }}</div>
+                        </div>
+                    {% endif %}
                     <form method="post" action="{% url 'accounts:login' %}"
                           class="d-flex justify-content-around align-items-center h-100 w-100 flex-column my-5">
                         {% csrf_token %}
@@ -17,10 +22,10 @@
 
                         <label for="password">
                             Пароль
-                            <input name="password" value="" placeholder="Пароль">
+                            <input name="password" value="" placeholder="Пароль" type="password">
                         </label>
 
-                        <button class="btn btn-dark">Авторизація</button>
+                        <button class="btn btn-blue">Авторизація</button>
                     </form>
                 </div>
 

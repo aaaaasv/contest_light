@@ -17,18 +17,23 @@ def signup(request):
     if request.POST:
         try:
             register_user(request.POST)
+            return redirect('accounts:login')
         except ValidationError as e:
             context = {'errors': e}
     return render(request, template_name='accounts/signup.html', context=context)
 
 
 def login(request):
+    context = {}
     if request.POST:
         is_logged, user_id = login_user(request.POST)
-        if is_logged:
+        if is_logged and user_id:
             request.session['logged'] = True
             request.session['user_id'] = user_id
-    return render(request, template_name='accounts/login.html')
+            return redirect('testing:available-tests')
+        else:
+            context['errors'] = 'Електронна пошта або пароль введені неправильно'
+    return render(request, template_name='accounts/login.html', context=context)
 
 
 def logout(request):

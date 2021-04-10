@@ -10,11 +10,15 @@
                     <form method="post" action="{% url 'accounts:signup' %}"
                           class="d-flex justify-content-around align-items-center h-100 w-100 flex-column my-5">
                         {% csrf_token %}
-                    <div class="errors d-flex justify-content-center align-items-center w-100 flex-column text-center">
-                        {% for error in errors %}
-                        <div style="color:red">{{ error }}</div>
-                        {% endfor %}
-                    </div>
+                        {% if errors %}
+
+                            <div class="errors d-flex justify-content-center align-items-center w-100 flex-column text-center">
+                                {% for error in errors %}
+                                    <div style="color:red">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
                         <div class="form-one">
                             <label for="email">
                                 E-mail
@@ -23,12 +27,14 @@
 
                             <label for="password1">
                                 Пароль
-                                <input name="password1" value="" placeholder="Пароль" type="password" class="password-input-one">
+                                <input name="password1" value="" placeholder="Пароль" type="password"
+                                       class="password-input-one">
                             </label>
 
                             <label for="password2">
                                 Пароль
-                                <input name="password2" value="" placeholder="Пароль" type="password" class="password-input-two">
+                                <input name="password2" value="" placeholder="Пароль" type="password"
+                                       class="password-input-two">
                             </label>
                             <button class="btn btn-blue mt-3 btn-email" type="button">Далі</button>
                         </div>
@@ -92,7 +98,7 @@
                 complete: function (response) {
                     if (response.responseJSON.email_unique === 'false') {
                         alert("Користувач з такою електронною поштою вже існує!")
-                                                $('.form-two').hide()
+                        $('.form-two').hide()
                         $('.form-one').show()
                     }
                 },
